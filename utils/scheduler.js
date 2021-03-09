@@ -52,7 +52,7 @@ let scheduler = {
     for (let taskName of taskNames) {
       let options = tasks[taskName].options;
       let willTime = moment(randomDate(options));
-      let waitTime = options.dev ? 0 : Math.floor(Math.random() * 600);
+      let waitTime = options.dev ? 0 : Math.floor(Math.random() * 10);
       if (options) {
         if (options.isCircle || options.dev) {
           willTime = moment().startOf("days");
@@ -71,7 +71,7 @@ let scheduler = {
       queues.push({
         taskName: taskName,
         taskState: 0,
-        willTime: willTime.format("YYYY-MM-DD HH:mm:ss"),
+        willTime: willTime.format("YYYY-MM-DD 00:00:00"),
         waitTime: waitTime,
       });
     }
@@ -275,8 +275,8 @@ let scheduler = {
         );
         console.log("tryrun 任务模式启动");
         if (!currentTasks.length) return console.log("无任务");
-        let queue = new PQueue({ concurrency: 2 });
-        console.log("👉 调度任务中", "并发数", 2);
+        let queue = new PQueue({ concurrency: 5 });
+        console.log("👉 调度任务中", "并发数", 5);
         for (let task of currentTasks) {
           queue.add(async () => {
             try {
@@ -379,8 +379,8 @@ let scheduler = {
           }
 
           // 任务执行
-          let queue = new PQueue({ concurrency: 2 });
-          console.log("👉 调度任务中", "并发数", 2);
+          let queue = new PQueue({ concurrency: 5 });
+          console.log("👉 调度任务中", "并发数", 5);
           for (let task of will_tasks) {
             queue.add(async () => {
               try {
@@ -393,7 +393,7 @@ let scheduler = {
                   );
                   // eslint-disable-next-line no-unused-vars
                   await new Promise((resolve, reject) =>
-                    setTimeout(resolve, task.waitTime * 1000)
+                    setTimeout(resolve, task.waitTime * 10)
                   );
                 }
 
